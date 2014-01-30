@@ -1,29 +1,18 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(robot_state_chain_publisher)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+find_package(catkin REQUIRED COMPONENTS roscpp kdl_parser sensor_msgs tf tf_conversions)
+find_package(Boost REQUIRED COMPONENTS system)
+find_package(orocos_kdl)
 
-rosbuild_init()
-rosbuild_add_boost_directories()
+catkin_package(
+   INCLUDE_DIRS include
+   LIBRARIES ${PROJECT_NAME})
 
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
-#uncomment if you have defined messages
-#genmsg()
-#uncomment if you have defined services
-#gensrv()
+add_library(${PROJECT_NAME} src/joint_state_listener.cpp src/robot_state_publisher.cpp)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
-rosbuild_add_library(${PROJECT_NAME} src/joint_state_listener.cpp src/robot_state_publisher.cpp)
-
-rosbuild_add_executable(state_chain_publisher src/state_publisher.cpp )
-target_link_libraries(state_chain_publisher ${PROJECT_NAME})
-
+add_executable(state_chain_publisher src/state_publisher.cpp)
+target_link_libraries(state_chain_publisher ${Boost_LIBRARIES} ${PROJECT_NAME} ${orocos_kdl_LIBRARIES})
