@@ -16,3 +16,9 @@ target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 add_executable(state_chain_publisher src/state_publisher.cpp)
 target_link_libraries(state_chain_publisher ${Boost_LIBRARIES} ${PROJECT_NAME} ${orocos_kdl_LIBRARIES})
+
+# Install library
+INSTALL (TARGETS ${PROJECT_NAME} DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+# Install executable
+INSTALL (TARGETS state_chain_publisher
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
