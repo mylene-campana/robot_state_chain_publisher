@@ -6,7 +6,6 @@ find_package(Boost REQUIRED COMPONENTS system)
 find_package(orocos_kdl)
 
 catkin_package(
-   INCLUDE_DIRS include
    LIBRARIES ${PROJECT_NAME})
 
 include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
